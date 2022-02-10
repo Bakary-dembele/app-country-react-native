@@ -7,20 +7,21 @@ import axios from 'axios';
 const CountriesScreen = (props) => {
 
     const [countries, setCountries] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         //Appel API pour récupérer la liste des pays
         handleRegionSelection('all')
     }, [])
 
-    
-
     const handleRegionSelection = (region) => {
         let param = ``;
         if(region === "all")
             param = region
         else
-            param = `region/${region}`
+            param = `region/${region}`;
+        setLoading(true);
         axios.get("https://restcountries.com/v3.1/" + param)
             .then(response => {
                 //console.log("Rest countries response => ", response.data[0])
@@ -37,27 +38,51 @@ const CountriesScreen = (props) => {
                     }
                 })
                 setCountries(countries);
+                setLoading(false);
             })
             .catch(error => {
                 console.error(error);
             })
-        console.log(region);
+    }
+
+    let pagination = [];
+    let countriesList = [];
+    if(countries) {
+        let end = countries.length / 10;
+        if(countries.length % 10 !== 0)
+            end++;
+        for (let i=1; i<= end; i++) {
+            pagination.push(
+                <TouchableOpacity onPress={() => setCurrentPage(i)}>
+                    <Text style={styles.regionButton}>{i}</Text>
+                </TouchableOpacity>
+            )
+        }
+        const beginList = (currentPage - 1) * 10;
+        const endList = currentPage * 10;
+        countriesList = countries.slice(beginList, endList);
     }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Countries</Text>
+            <Text style={styles.title}>Pays</Text>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={() => handleRegionSelection('all')}><Text style={styles.regionButton}>All</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => handleRegionSelection('all')}><Text style={styles.regionButton}>Tous</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => handleRegionSelection('Africa')}><Text style={styles.regionButton}>Afrique</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => handleRegionSelection('Americas')}><Text style={styles.regionButton}>Amériques</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => handleRegionSelection('Asia')}><Text style={styles.regionButton}>Asie</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => handleRegionSelection('Europe')}><Text style={styles.regionButton}>Europe</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => handleRegionSelection('Oceania')}><Text style={styles.regionButton}>Océanie</Text></TouchableOpacity>
             </View>
+            {
+                loading && <View>
+                    <Text style={styles.title}>Chargement...</Text>
+                </View>
+            }
             <Text style={styles.title}>Nombre de pays : {countries.length}</Text>
+            <View style={styles.buttonContainer}>{pagination}</View>
             <FlatList 
-                data={countries}
+                data={countriesList}
                 renderItem={country => 
                     <View style={styles.countryItem}>
                         <Image style={styles.flag} source={{uri: country.item.flag}} />
@@ -100,11 +125,12 @@ const styles = StyleSheet.create({
         fontSize: 17,
         borderRadius: 7,
         padding: 3,
-        marginHorizontal: 5
+        marginHorizontal: 3
     },
     countryItem: {
         marginTop: 20,
-        padding: 15,
+        paddingVertical: 15,
+        paddingHorizontal: 5,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
