@@ -10,14 +10,11 @@ const HomeScreen = (props) => {
     useEffect(() => {
         useAsyncStorage('userDetails').getItem()
         .then(userDetails => {
-            console.log("userDetails", userDetails)
             setUser(JSON.parse(userDetails));
         })
         .catch(error => {
             console.log(error)
         })
-        //setUser(props.route.params)
-        //console.log(props);
     }, [])
     
     return (
