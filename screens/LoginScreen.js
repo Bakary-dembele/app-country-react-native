@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -15,21 +17,42 @@ const LoginScreen = (props) => {
     });
 
     useEffect(() => {
-        console.log(response);
+        if(response?.type === 'success') {
+            const { authentication } = response;
+            const accessToken = authentication.accessToken;
+            axios.get('https://www.googleapis.com/oauth2/v3/userinfo?access_token=' + accessToken)
+                .then(response => {
+                    console.log(response)
+                    const userDetails = response.data;
+                    console.log(userDetails);
+                    const { given_name, family_name, email, picture } = userDetails;
+                    
+                    AsyncStorage.setItem('userDetails', JSON.stringify(
+                        {
+                            firstname: given_name,
+                            lastname: family_name,
+                            email: email,
+                            picture: picture
+                        })
+                    )
+                    .then(() => {
+                        console.log("Stockage des informations users dans le AsyncStorage")
+                        props.navigation.navigate("HomeScreen");
+                    })
+                    .catch(error => {
+                        console.log("AsynStorage call to setItem failure : ", error)
+                    })
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
     }, [response])
 
-    const navigateToHome = () => {
-        //console.log(props);
-        props.navigation.navigate("HomeScreen", {
-            firstname: props.route.params.firstname,
-            lastname: props.route.params.lastname,
-            age: props.route.params.age
-        });
-    }
     return (
         <View style={styles.container}>
             <Text style={{color: 'white',fontFamily: "Supermercado", fontSize: 20}}>Login Screen</Text>
-            <Button title='Login with Google' onPress={() => {
+            <Button title='Login with Google' disabled={!request} onPress={() => {
                 promptAsync()
             }} />
         </View>
