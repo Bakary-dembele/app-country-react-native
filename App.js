@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import WelcomeScreen from './screens/WelcomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
+import CountriesScreen from './screens/CountriesScreen';
 import * as Font from 'expo-font';
 
 // const Stack = createStackNavigator();
@@ -72,6 +73,10 @@ const App = () => {
                         headerShown: false
                     }}
                 />
+                <Screen name="CountriesScreen" component={CountriesScreen} options={{
+                    title: "List of countries",
+                    headerLeft: false
+                }}/>
             </Navigator>
         </NavigationContainer>
     );
