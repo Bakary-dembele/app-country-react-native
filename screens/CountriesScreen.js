@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, ScrollView, Image, Button,
-TouchableOpacity } from 'react-native';
+TouchableOpacity, TextInput } from 'react-native';
 import axios from 'axios';
 
 const CountriesScreen = (props) => {
@@ -9,11 +9,18 @@ const CountriesScreen = (props) => {
     const [countries, setCountries] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const [researchPattern, setResearchPattern] = useState("");
 
     useEffect(() => {
         //Appel API pour récupérer la liste des pays
         handleRegionSelection('all')
     }, [])
+
+    const navigateToCountryDetails = (countryName) => {
+        props.navigation.navigate("CountryDetailsScreen", {
+            countryName
+        });
+    }
 
     const handleRegionSelection = (region) => {
         let param = ``;
@@ -24,7 +31,7 @@ const CountriesScreen = (props) => {
         setLoading(true);
         axios.get("https://restcountries.com/v3.1/" + param)
             .then(response => {
-                //console.log("Rest countries response => ", response.data[0])
+                console.log("Rest countries response => ", response.data[2])
                 const countries = response.data.map(country => {
                     return {
                         commonName: country.name.common,
@@ -38,6 +45,7 @@ const CountriesScreen = (props) => {
                     }
                 })
                 setCountries(countries);
+                setCurrentPage(1);
                 setLoading(false);
             })
             .catch(error => {
@@ -53,7 +61,7 @@ const CountriesScreen = (props) => {
             end++;
         for (let i=1; i<= end; i++) {
             pagination.push(
-                <TouchableOpacity onPress={() => setCurrentPage(i)}>
+                <TouchableOpacity key={i} onPress={() => setCurrentPage(i)}>
                     <Text style={styles.regionButton}>{i}</Text>
                 </TouchableOpacity>
             )
@@ -61,6 +69,33 @@ const CountriesScreen = (props) => {
         const beginList = (currentPage - 1) * 10;
         const endList = currentPage * 10;
         countriesList = countries.slice(beginList, endList);
+    }
+
+    const renderHeader = () => {
+        return (
+            <TextInput
+                style={styles.textInput} 
+                placeholder="Entrer le nom d'un pays"
+                value={researchPattern}
+                onChangeText={pattern => {
+                    setResearchPattern(pattern)
+                    filterCountries()
+                    }}
+            />
+        )
+    }
+
+    const filterCountries = () => {
+        setLoading(true);
+        const newCountriesList = countriesList.filter(country => {
+            const countryInfo = `${country.commonName.toLowerCase()}
+            ${country.frenchName.toLowerCase()}`;
+            const research = researchPattern.toLowerCase();
+            return countryInfo.indexOf(research) > -1;
+        })
+        setCountries(newCountriesList);
+        setCurrentPage(1);
+        setLoading(false);
     }
 
     return (
@@ -79,6 +114,9 @@ const CountriesScreen = (props) => {
                     <Text style={styles.title}>Chargement...</Text>
                 </View>
             }
+            {
+                !loading &&
+                <>
             <Text style={styles.title}>Nombre de pays : {countries.length}</Text>
             <View style={styles.buttonContainer}>{pagination}</View>
             <FlatList 
@@ -91,10 +129,14 @@ const CountriesScreen = (props) => {
                         <Text style={styles.itemInfo}>Région : {country.item.region}</Text>
                         <Text style={styles.itemInfo}>Capitale : {country.item.capital}</Text>
                         <Text style={styles.itemInfo}>Style de conduite : {country.item.carSide}</Text>
+                        <TouchableOpacity onPress={() => navigateToCountryDetails(country.item.commonName)}><Text style={styles.regionButton}>Voir détails</Text></TouchableOpacity>
                     </View>
                 }
                 keyExtractor={country => country.id}
+                //ListHeaderComponent={() => renderHeader()}
             />
+            </>
+            }
             <StatusBar style="auto" />
         </View>
     );
@@ -145,10 +187,17 @@ const styles = StyleSheet.create({
     },
     itemInfo: {
         color: 'white',
-        marginTop: 5,
+        marginBottom: 5,
         textAlign: 'center'
+    },
+    textInput: {
+        backgroundColor: 'white',
+        marginVertical: 15,
+        marginHorizontal: 10,
+        height: 30,
+        borderRadius: 15,
+        padding: 5
     }
-
 })
 
 export default CountriesScreen;

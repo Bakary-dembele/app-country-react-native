@@ -7,6 +7,7 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import CountriesScreen from './screens/CountriesScreen';
+import CountryDetailsScreen from './screens/CountryDetailsScreen';
 import * as Font from 'expo-font';
 
 // const Stack = createStackNavigator();
@@ -77,6 +78,10 @@ const App = () => {
                     title: "List of countries",
                     headerLeft: false
                 }}/>
+                <Screen name="CountryDetailsScreen" component={CountryDetailsScreen} options={{
+                    title: "Détail d'un pays"
+                }}
+                 />
             </Navigator>
         </NavigationContainer>
     );
