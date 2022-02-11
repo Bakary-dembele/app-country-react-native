@@ -17,18 +17,6 @@ const CountryDetailsScreen = (props) => {
         axios.get(`https://restcountries.com/v3.1/name/${country}?fullText=true`)
             .then(response => {
                 console.log("Rest country response => ", response.data[0])
-                // const countries = response.data.map(country => {
-                //     return {
-                //         commonName: country.name.common,
-                //         frenchName: country.translations.fra.official,
-                //         region: country.region,
-                //         flag: country.flags.png,
-                //         population: country.population,
-                //         capital: country.capital ? country.capital[0] : "Non défini",
-                //         carSide: country.side === "right" ? "à droite" : "à gauche",
-                //         id: country.altSpellings[0]
-                //     }
-                // })
                 setCountry(response.data[0]);
                 setLoading(false);
             })
