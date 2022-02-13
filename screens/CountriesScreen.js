@@ -1,7 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ScrollView, Image, Button,
-TouchableOpacity, TextInput } from 'react-native';
+import {
+    View, Text, FlatList, StyleSheet, ScrollView, Image, Button,
+    TouchableOpacity, TextInput
+} from 'react-native';
 import axios from 'axios';
 
 const CountriesScreen = (props) => {
@@ -24,10 +26,11 @@ const CountriesScreen = (props) => {
 
     const handleRegionSelection = (region) => {
         let param = ``;
-        if(region === "all")
+        if (region === "all") {
             param = region
-        else
+        } else {
             param = `region/${region}`;
+        }
         setLoading(true);
         axios.get("https://restcountries.com/v3.1/" + param)
             .then(response => {
@@ -55,11 +58,11 @@ const CountriesScreen = (props) => {
 
     let pagination = [];
     let countriesList = [];
-    if(countries) {
+    if (countries) {
         let end = countries.length / 10;
-        if(countries.length % 10 !== 0)
+        if (countries.length % 10 !== 0)
             end++;
-        for (let i=1; i<= end; i++) {
+        for (let i = 1; i <= end; i++) {
             pagination.push(
                 <TouchableOpacity key={i} onPress={() => setCurrentPage(i)}>
                     <Text style={styles.regionButton}>{i}</Text>
@@ -74,13 +77,13 @@ const CountriesScreen = (props) => {
     const renderHeader = () => {
         return (
             <TextInput
-                style={styles.textInput} 
+                style={styles.textInput}
                 placeholder="Entrer le nom d'un pays"
                 value={researchPattern}
                 onChangeText={pattern => {
                     setResearchPattern(pattern)
                     filterCountries()
-                    }}
+                }}
             />
         )
     }
@@ -117,25 +120,24 @@ const CountriesScreen = (props) => {
             {
                 !loading &&
                 <>
-            <Text style={styles.title}>Nombre de pays : {countries.length}</Text>
-            <View style={styles.buttonContainer}>{pagination}</View>
-            <FlatList 
-                data={countriesList}
-                renderItem={country => 
-                    <View style={styles.countryItem}>
-                        <Image style={styles.flag} source={{uri: country.item.flag}} />
-                        <Text style={styles.itemInfo}>Nom commun : {country.item.commonName}</Text>
-                        <Text style={styles.itemInfo}>Nom français : {country.item.frenchName}</Text>
-                        <Text style={styles.itemInfo}>Région : {country.item.region}</Text>
-                        <Text style={styles.itemInfo}>Capitale : {country.item.capital}</Text>
-                        <Text style={styles.itemInfo}>Style de conduite : {country.item.carSide}</Text>
-                        <TouchableOpacity onPress={() => navigateToCountryDetails(country.item.commonName)}><Text style={styles.regionButton}>Voir détails</Text></TouchableOpacity>
-                    </View>
-                }
-                keyExtractor={country => country.id}
-                //ListHeaderComponent={() => renderHeader()}
-            />
-            </>
+                    <Text style={styles.title}>Nombre de pays : {countries.length}</Text>
+                    <View style={styles.buttonContainer}>{pagination}</View>
+                    <FlatList
+                        data={countriesList}
+                        renderItem={country =>
+                            <View style={styles.countryItem}>
+                                <Image style={styles.flag} source={{ uri: country.item.flag }} />
+                                <Text style={styles.itemInfo}>Nom commun : {country.item.commonName}</Text>
+                                <Text style={styles.itemInfo}>Nom français : {country.item.frenchName}</Text>
+                                <Text style={styles.itemInfo}>Région : {country.item.region}</Text>
+                                <Text style={styles.itemInfo}>Capitale : {country.item.capital}</Text>
+                                <Text style={styles.itemInfo}>Style de conduite : {country.item.carSide}</Text>
+                                <TouchableOpacity onPress={() => navigateToCountryDetails(country.item.commonName)}><Text style={styles.regionButton}>Voir détails</Text></TouchableOpacity>
+                            </View>
+                        }
+                        keyExtractor={country => country.id}
+                    />
+                </>
             }
             <StatusBar style="auto" />
         </View>

@@ -1,9 +1,8 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const WelcomeScreen = (props) => {
-    //console.log(props);
+
     const navigateToLogin = () => {
-        //console.log(props);
         props.navigation.navigate("LoginScreen", {
             firstname: "John",
             lastname: "Smith",
@@ -12,7 +11,7 @@ const WelcomeScreen = (props) => {
     }
     return (
         <View style={styles.container}>
-            <Text style={{color: 'white', fontFamily: "Supermercado", fontSize: 20}}
+            <Text style={{ color: 'white', fontFamily: "Supermercado", fontSize: 20 }}
             >Welcome Screen</Text>
             <TouchableOpacity onPress={navigateToLogin}>
                 <View style={styles.button}>

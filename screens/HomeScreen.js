@@ -7,24 +7,24 @@ const HomeScreen = (props) => {
 
     useEffect(() => {
         useAsyncStorage('userDetails').getItem()
-        .then(userDetails => {
-            setUser(JSON.parse(userDetails));
-        })
-        .catch(error => {
-            console.log(error)
-        })
+            .then(userDetails => {
+                setUser(JSON.parse(userDetails));
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }, [])
-    
+
     const navigateToCountries = () => {
         props.navigation.navigate("CountriesScreen");
     }
-    
+
     return (
         <View style={styles.container}>
-            <Image style={styles.userPicture} source={{uri: user.picture}} />
+            <Image style={styles.userPicture} source={{ uri: user.picture }} />
             <Text style={styles.text}>Welcome {user.firstname} {user.lastname} !</Text>
             <Text style={styles.text}>You're are logged with email : {user.email}</Text>
-            <Button title='See countries' onPress={() => {navigateToCountries()}} />
+            <Button title='See countries' onPress={() => { navigateToCountries() }} />
         </View>
     );
 }

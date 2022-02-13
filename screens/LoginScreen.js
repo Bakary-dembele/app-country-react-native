@@ -8,16 +8,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 WebBrowser.maybeCompleteAuthSession();
 
 const LoginScreen = (props) => {
-    
-    const [request, response, promptAsync] = Google.useAuthRequest({
-        expoClientId: '156601157754-m28p5fna485soi50b7mgn210ce7phteu.apps.googleusercontent.com',
-        iosClientId: '',
-        androidClientId: '',
-        webClientId: '156601157754-m28p5fna485soi50b7mgn210ce7phteu.apps.googleusercontent.com'
-    });
+
+    const [request, response, promptAsync] =
+        Google.useAuthRequest({
+            expoClientId: '275019743251-dg8tmucchi8m90rq155m4hf5jmnaq6es.apps.googleusercontent.com',
+            iosClientId: '',
+            androidClientId: '',
+            webClientId: '275019743251-dg8tmucchi8m90rq155m4hf5jmnaq6es.apps.googleusercontent.com'
+        });
 
     useEffect(() => {
-        if(response?.type === 'success') {
+        if (response?.type === 'success') {
             const { authentication } = response;
             const accessToken = authentication.accessToken;
             axios.get('https://www.googleapis.com/oauth2/v3/userinfo?access_token=' + accessToken)
@@ -26,7 +27,7 @@ const LoginScreen = (props) => {
                     const userDetails = response.data;
                     console.log(userDetails);
                     const { given_name, family_name, email, picture } = userDetails;
-                    
+
                     AsyncStorage.setItem('userDetails', JSON.stringify(
                         {
                             firstname: given_name,
@@ -35,13 +36,13 @@ const LoginScreen = (props) => {
                             picture: picture
                         })
                     )
-                    .then(() => {
-                        console.log("Stockage des informations users dans le AsyncStorage")
-                        props.navigation.navigate("HomeScreen");
-                    })
-                    .catch(error => {
-                        console.log("AsynStorage call to setItem failure : ", error)
-                    })
+                        .then(() => {
+                            console.log("Stockage des informations users dans le AsyncStorage")
+                            props.navigation.navigate("HomeScreen");
+                        })
+                        .catch(error => {
+                            console.log("AsynStorage call to setItem failure : ", error)
+                        })
                 })
                 .catch(error => {
                     console.log(error)
@@ -51,7 +52,7 @@ const LoginScreen = (props) => {
 
     return (
         <View style={styles.container}>
-            <Text style={{color: 'white',fontFamily: "Supermercado", fontSize: 20}}>Login Screen</Text>
+            <Text style={{ color: 'white', fontFamily: "Supermercado", fontSize: 20 }}>Login Screen</Text>
             <Button title='Login with Google' disabled={!request} onPress={() => {
                 promptAsync()
             }} />

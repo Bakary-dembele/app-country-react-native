@@ -33,22 +33,22 @@ const CountryDetailsScreen = (props) => {
                     <Text style={styles.title}>Chargement...</Text>
                 </View>
             }
-            
+
             {
-                !loading && 
-            <View style={styles.countryItem}>
-                <Image style={styles.flag} source={{uri: country.flags.png}} />
-                <Text style={styles.itemInfo}>Nom commun : {country.name.common}</Text>
-                <Text style={styles.itemInfo}>Nom français : {country.translations.fra.official}</Text>
-                <Text style={styles.itemInfo}>Région : {country.region}</Text>
-                <Text style={styles.itemInfo}>Capitale : {country.capital ? country.capital[0] : "Non définie"}</Text>
-                <Text style={styles.itemInfo}>Nombre d'habitants : {country.population}</Text>
-                <Text style={styles.itemInfo}>Style de conduite : {country.car.side === "right" ? "à droite" : "à gauche"}</Text>
-                <Text style={styles.itemInfo}>Pays membre de l'ONU : {country.unMember ? "Oui" : "Non"}</Text>
-                <Button title="Afficher Maps" onPress={() => Linking.openURL(country.maps.googleMaps)} />
-            </View>
+                !loading &&
+                <View style={styles.countryItem}>
+                    <Image style={styles.flag} source={{ uri: country.flags.png }} />
+                    <Text style={styles.itemInfo}>Nom commun : {country.name.common}</Text>
+                    <Text style={styles.itemInfo}>Nom français : {country.translations.fra.official}</Text>
+                    <Text style={styles.itemInfo}>Région : {country.region}</Text>
+                    <Text style={styles.itemInfo}>Capitale : {country.capital ? country.capital[0] : "Non définie"}</Text>
+                    <Text style={styles.itemInfo}>Nombre d'habitants : {country.population}</Text>
+                    <Text style={styles.itemInfo}>Style de conduite : {country.car.side === "right" ? "à droite" : "à gauche"}</Text>
+                    <Text style={styles.itemInfo}>Pays membre de l'ONU : {country.unMember ? "Oui" : "Non"}</Text>
+                    <Button title="Afficher Maps" onPress={() => Linking.openURL(country.maps.googleMaps)} />
+                </View>
             }
-                
+
             <StatusBar style="auto" />
         </View>
     );

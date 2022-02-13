@@ -10,9 +10,6 @@ import CountriesScreen from './screens/CountriesScreen';
 import CountryDetailsScreen from './screens/CountryDetailsScreen';
 import * as Font from 'expo-font';
 
-// const Stack = createStackNavigator();
-// console.log('Stack navigator : ', Stack);
-
 const { Navigator, Screen } = createStackNavigator();
 
 const App = () => {
@@ -30,7 +27,7 @@ const App = () => {
                 "Festive": require("./assets/fonts/Festive-Regular.ttf")
             })
             setLoading(false);
-        } catch(e) {
+        } catch (e) {
             console.log("erreur lors du chargement des polices ", e);
         }
     }
@@ -38,7 +35,7 @@ const App = () => {
     if (loading) {
         return (
             <View style={styles.container}>
-                <Text style={{color: 'white'}}>Loading...</Text>
+                <Text style={{ color: 'white' }}>Loading...</Text>
             </View>
         );
     }
@@ -58,18 +55,14 @@ const App = () => {
             }}>
                 <Screen name="WelcomeScreen" component={WelcomeScreen} options={{
                     title: "Welcome"
-                }}/>
+                }} />
                 <Screen name="LoginScreen" component={LoginScreen} options={
                     {
                         headerLeft: false,
                         title: "Connection",
-                        // headerStyle: {
-                        //     backgroundColor: "yellow"
-                        // },
-                        // headerTintColor: "black"
                     }
-                }/>
-                <Screen name="HomeScreen" component={HomeScreen} options= 
+                } />
+                <Screen name="HomeScreen" component={HomeScreen} options=
                     {{
                         headerShown: false
                     }}
@@ -77,11 +70,11 @@ const App = () => {
                 <Screen name="CountriesScreen" component={CountriesScreen} options={{
                     title: "List of countries",
                     headerLeft: false
-                }}/>
+                }} />
                 <Screen name="CountryDetailsScreen" component={CountryDetailsScreen} options={{
                     title: "Détail d'un pays"
                 }}
-                 />
+                />
             </Navigator>
         </NavigationContainer>
     );
